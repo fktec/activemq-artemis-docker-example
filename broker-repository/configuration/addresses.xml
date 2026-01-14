@@ -1,0 +1,31 @@
+<addresses xmlns="urn:activemq:core">
+
+	<!-- Default -->
+	<address name="DLQ">
+		<anycast>
+			<queue name="DLQ" />
+		</anycast>
+	</address>
+	<address name="ExpiryQueue">
+		<anycast>
+			<queue name="ExpiryQueue" />
+		</anycast>
+	</address>
+
+	<!-- Topic/Queue - Teste 1 -->
+	<address name="test.temporary">
+        <multicast>
+            <queue name="sub.t1.test.temporary"/>
+        </multicast>
+    </address>
+    <address name="test.temporary.DLA">
+		<anycast>
+			<queue name="sub.t1.test.temporary.DLQ">
+				<durable>true</durable>
+				<filter string="_AMQ_ORIG_QUEUE='sub.t1.test.temporary'" />
+			</queue>
+		</anycast>
+	</address>
+
+</addresses>
+

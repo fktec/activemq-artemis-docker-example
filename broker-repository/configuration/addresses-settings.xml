@@ -1,0 +1,72 @@
+<address-settings xmlns="urn:activemq:core">
+
+	<!-- if you define auto-create on certain queues, management has to be auto-create -->
+	<address-setting match="activemq.management#">
+		<dead-letter-address>DLQ</dead-letter-address>
+		<expiry-address>ExpiryQueue</expiry-address>
+		<redelivery-delay>0</redelivery-delay>
+		<!-- with -1 only the global-max-size is in use for limiting -->
+		<max-size-bytes>-1</max-size-bytes>
+		<message-counter-history-day-limit>10</message-counter-history-day-limit>
+		<address-full-policy>PAGE</address-full-policy>
+		<!-- <auto-create-queues>true</auto-create-queues>
+		<auto-create-addresses>true</auto-create-addresses>
+		<auto-create-jms-queues>true</auto-create-jms-queues>
+		<auto-create-jms-topics>true</auto-create-jms-topics> -->
+		<auto-create-queues>false</auto-create-queues>
+		<auto-create-addresses>false</auto-create-addresses>
+		<auto-create-jms-queues>false</auto-create-jms-queues>
+		<auto-create-jms-topics>false</auto-create-jms-topics>
+	</address-setting>
+
+	<!--default for catch all-->
+	<address-setting match="#">
+		<!-- <dead-letter-address>DLQ</dead-letter-address> -->
+		<dead-letter-address>DLA</dead-letter-address>
+		<expiry-address>ExpiryQueue</expiry-address>
+		<expiry-delay>86400000</expiry-delay>
+		<message-counter-history-day-limit>10</message-counter-history-day-limit>
+		<address-full-policy>PAGE</address-full-policy>
+		<max-delivery-attempts>-1</max-delivery-attempts>
+		<redelivery-delay>0</redelivery-delay>
+		<!-- with -1 only the global-max-size is in use for limiting -->
+		<max-size-bytes>-1</max-size-bytes>
+		<!-- <auto-create-queues>true</auto-create-queues>
+		<auto-create-addresses>true</auto-create-addresses>
+		<auto-create-jms-queues>true</auto-create-jms-queues>
+		<auto-create-jms-topics>true</auto-create-jms-topics> -->
+		<auto-create-queues>false</auto-create-queues>
+		<auto-create-addresses>false</auto-create-addresses>
+		<auto-create-jms-queues>false</auto-create-jms-queues>
+		<auto-create-jms-topics>false</auto-create-jms-topics>
+	</address-setting>
+
+	<!-- Temporary -->
+    <address-setting match="test.temporary.#">
+        <expiry-delay>1800000</expiry-delay>
+        <dead-letter-queue-prefix/>
+        <dead-letter-queue-suffix>.DLQ</dead-letter-queue-suffix>
+        <max-delivery-attempts>1</max-delivery-attempts>
+        <redelivery-delay>5000</redelivery-delay>
+        <auto-create-dead-letter-resources>false</auto-create-dead-letter-resources>        
+    </address-setting>   
+
+    <address-setting match="test.temporary">
+        <dead-letter-address>test.temporary.DLA</dead-letter-address>
+    </address-setting>
+
+	<!-- Temporary 2 -->
+    <address-setting match="test.temporary2.#">
+        <expiry-delay>900000</expiry-delay>
+        <dead-letter-queue-prefix/>
+        <dead-letter-queue-suffix>.DLQ</dead-letter-queue-suffix>
+        <max-delivery-attempts>1</max-delivery-attempts>
+        <redelivery-delay>5000</redelivery-delay>
+        <auto-create-dead-letter-resources>false</auto-create-dead-letter-resources>        
+    </address-setting>   
+
+    <address-setting match="test.temporary2">
+        <dead-letter-address>test.temporary2.DLA</dead-letter-address>
+    </address-setting>
+
+</address-settings>

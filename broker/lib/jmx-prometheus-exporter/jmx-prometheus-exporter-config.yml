@@ -1,0 +1,94 @@
+---
+lowercaseOutputName: true
+lowercaseOutputLabelNames: true
+rules:
+  - pattern: "org.apache.activemq.artemis<broker=\"([^\"]*)\", \
+              component=addresses, address=\"([^\"]*)\"><>NumberOfMessages"
+    name: org_apache_activemq_77_broker_queuesize
+    help: >-
+      Number of messages on this destination,
+       including any that have been dispatched but not acknowledged
+    type: GAUGE
+    labels:
+      broker: $1
+      component: addresses
+      address: $2
+  - pattern: "org.apache.activemq.artemis<broker=\"([^\"]*)\", \
+              component=addresses, address=\"([^\"]*)\", \
+              subcomponent=([^\"]*), routing-type=\"([^\"]*)\", \
+              queue=\"([^\"]*)\"><>ConsumerCount"
+    name: org_apache_activemq_77_broker_consumercount
+    help: Number of consumers consuming messages from this queue
+    type: GAUGE
+    labels:
+      broker: $1
+      component: addresses
+      address: $2
+      subcomponent: $3
+      routingType: $4
+      queue: $5
+  - pattern: "org.apache.activemq.artemis<broker=\"([^\"]*)\", \
+              component=addresses, address=\"([^\"]*)\"><>UnRoutedMessageCount"
+    name: org_apache_activemq_77_broker_unroutedmessagecount
+    help: Number of messages not routed to any bindings
+    type: COUNTER
+    labels:
+      broker: $1
+      component: addresses
+      address: $2
+  - pattern: "org.apache.activemq.artemis<broker=\"([^\"]*)\", \
+              component=addresses, address=\"([^\"]*)\"><>RoutedMessageCount"
+    name: org_apache_activemq_77_broker_routedmessagecount
+    help: Number of messages routed to one or more bindings
+    type: COUNTER
+    labels:
+      broker: $1
+      component: addresses
+      address: $2
+  - pattern: "org.apache.activemq.artemis<broker=\"([^\"]*)\">\
+              <>DiskStoreUsagePercentage"
+    name: org_apache_activemq_77_broker_diskstoreusagepercentage
+    help: Memory used by the disk store
+    type: GAUGE
+    labels:
+      broker: $1
+  - pattern: "org.apache.activemq.artemis<broker=\"([^\"]*)\", component=addresses, address=\"([^\"]*)\", subcomponent=queues, routing-type=\"([^\"]*)\", queue=\"([^\"]*)\"><>MessageCount"
+    name: org_apache_activemq_77_broker_queue_messagecount
+    help: Number of messages in queue
+    type: GAUGE
+    labels:
+      broker: $1
+      component: addresses
+      address: $2
+      routing-type: $3
+      queue: $4
+  - pattern: "org.apache.activemq.artemis<broker=\"([^\"]*)\", component=addresses, address=\"([^\"]*)\", subcomponent=queues, routing-type=\"([^\"]*)\", queue=\"([^\"]*)\"><>MessagesAdded"
+    name: org_apache_activemq_77_broker_queue_messageadded
+    help: Number of messages added in queue
+    type: COUNTER
+    labels:
+      broker: $1
+      component: addresses
+      address: $2
+      routing-type: $3
+      queue: $4
+  - pattern: "org.apache.activemq.artemis<broker=\"([^\"]*)\", component=addresses, address=\"([^\"]*)\", subcomponent=queues, routing-type=\"([^\"]*)\", queue=\"([^\"]*)\"><>MessagesAcknowledged"
+    name: org_apache_activemq_77_broker_queue_messagesacknowledged
+    help: Number of messages acknowledged from this queue since it was created
+    type: COUNTER
+    labels:
+      broker: $1
+      component: addresses
+      address: $2
+      routing-type: $3
+      queue: $4
+  - pattern: "org.apache.activemq.artemis<broker=\"([^\"]*)\", component=addresses, address=\"([^\"]*)\", subcomponent=queues, routing-type=\"([^\"]*)\", queue=\"([^\"]*)\"><>DeliveringCount"
+    name: org_apache_activemq_77_broker_queue_deliveringcount
+    help: Number of messages that this queue is currently delivering to its consumers
+    type: COUNTER
+    labels:
+      broker: $1
+      component: addresses
+      address: $2
+      routing-type: $3
+      queue: $4

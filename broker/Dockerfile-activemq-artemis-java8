@@ -1,0 +1,103 @@
+# FROM docker.artifactory.globoi.com/gcorp/devops/docker-images/ubuntu-linux/java-jre8-temurin:24.04
+FROM maven:3-openjdk-8-slim
+
+# Common configurations
+ENV DEBUG_ENABLED="false"
+
+# Environment User & Roles
+ENV AMQ_LOGIN_ENABLED='true'
+ENV AMQ_USER='amq-admin'
+ENV AMQ_PASSWORD='admin1234'
+
+# Environment Roles
+ENV ADMIN_ROLE="admin"
+
+# Environment configurations
+ENV EXTRA_ARGS='--http-host 0.0.0.0 --relax-jolokia'
+
+# Environment folders
+ENV BROKER_SOURCE_NAME="apache-artemis-2.17.0"
+ENV BROKER_SOURCE_BIN="./bin/${BROKER_SOURCE_NAME}.tar"
+ENV BROKER_FOLDER="/opt/broker" 
+ENV BROKER_CONFIGURATIONS_FOLDER="${BROKER_FOLDER}/configurations"
+ENV BROKER_SCRIPTS_FOLDER="${BROKER_FOLDER}/scripts"
+ENV ARTEMIS_BUILD_FOLDER="${BROKER_FOLDER}/${BROKER_SOURCE_NAME}"
+ENV ARTEMIS_BUILD_BIN_FOLDER="${ARTEMIS_BUILD_FOLDER}/bin"
+ENV ARTEMIS_BUILD_DEFAULT_FOLDER="${ARTEMIS_BUILD_FOLDER}/default"
+ENV ARTEMIS_INSTANCE_FOLDER="${BROKER_FOLDER}/broker-activemq-artemis"
+ENV ARTEMIS_INSTANCE_BIN_FOLDER="${ARTEMIS_INSTANCE_FOLDER}/bin"
+ENV ARTEMIS_INSTANCE_SSL_FOLDER="${ARTEMIS_INSTANCE_FOLDER}/ssl"
+ENV ARTEMIS_INSTANCE_DEFAULT_FOLDER="${BROKER_FOLDER}/activemq-artemis-default"
+ENV ARTEMIS_INSTANCE_CUSTOM_FOLDER="${BROKER_FOLDER}/activemq-artemis-custom"
+ENV ARTEMIS_INSTANCE_LIB_JMX_PROMETHEUS_FOLDER="/lib/jmx-prometheus-exporter"
+
+# Broker ARGS
+ENV AMQ_NAME="broker"
+ENV AMQ_CONFIG_MIN_LARGE_MESSAGE_SIZE="102400"
+
+# Custom ARGS
+ENV JAVA_DEFAULT_ARGS="-Djava.net.preferIPv4Stack=true"
+ENV JAVA_OPTS="-XX:+PrintClassHistogram -XX:+UseG1GC -XX:+UseStringDeduplication -Xms512M -Xmx2G"
+ENV JAVA_JMX_ARGS="-javaagent:${ARTEMIS_INSTANCE_FOLDER}/lib/jmx-prometheus-exporter/jmx-prometheus-exporter.jar=9779:${ARTEMIS_INSTANCE_FOLDER}/lib/jmx-prometheus-exporter/jmx-prometheus-exporter-config.yml"
+ENV JOLOKIA_ARGS="-Djolokia.policyLocation=file:${ARTEMIS_INSTANCE_FOLDER}/etc/jolokia-access.xml"
+ENV HAWTIO_ARGS="-Dhawtio.realm=activemq -Dhawtio.offline=true -Dhawtio.rolePrincipalClasses=org.apache.activemq.artemis.spi.core.security.jaas.RolePrincipal"
+
+# ActiveMQ Ports
+EXPOSE 8161 \
+# JMX Exporter
+    9779 \
+# Port for CORE,MQTT,AMQP,HORNETQ,STOMP,OPENWIRE
+    61616 \
+# Port for CORE,MQTT,AMQPS,HORNETQ,STOMP,OPENWIRE
+    61617 \
+# Port for HORNETQ,STOMP
+    5445 \
+# Port for AMQPS
+    5672 \
+# Port for AMQP
+    5671 \
+# Port for MQTT
+    1883 \
+# Port for STOMP
+    61613
+
+USER root
+
+# Install dependencies
+# RUN apt-get update && \
+#     apt-get install -y libaio1 && \
+#     apt-get clean
+
+# Install dependencies
+# RUN apt-get update && \
+#     apt-get install -y libaio1t64 && \
+#     apt-get clean
+
+# RUN ln -s /usr/lib/x86_64-linux-gnu/libaio.so.1t64 /usr/lib/x86_64-linux-gnu/libaio.so.1
+
+# Copy broker bin files
+ADD ${BROKER_SOURCE_BIN} ${BROKER_FOLDER}
+# Rename artemis CLI binary to artemis-build
+RUN mv ${ARTEMIS_BUILD_BIN_FOLDER}/artemis ${ARTEMIS_BUILD_BIN_FOLDER}/artemis-build
+
+# Copy broker scripts files
+ADD ./scripts ${BROKER_SCRIPTS_FOLDER}
+
+# Copy broker libs
+COPY ./lib/jmx-prometheus-exporter ${ARTEMIS_INSTANCE_DEFAULT_FOLDER}${ARTEMIS_INSTANCE_LIB_JMX_PROMETHEUS_FOLDER}
+
+# Environments CLI
+ENV PATH="$ARTEMIS_BUILD_BIN_FOLDER:$ARTEMIS_INSTANCE_BIN_FOLDER:$BROKER_SCRIPTS_FOLDER:$PATH"
+
+# Create Required Folders
+RUN mkdir -p ${ARTEMIS_INSTANCE_CUSTOM_FOLDER}
+
+# CLI folders permissions
+RUN \
+chmod -R +x ${BROKER_FOLDER}
+
+ENTRYPOINT \
+# Build Broker
+broker-build.sh \
+# Run Broker
+&& broker-run.sh

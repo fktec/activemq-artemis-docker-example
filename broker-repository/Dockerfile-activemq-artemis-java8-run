@@ -1,0 +1,11 @@
+FROM broker/activemq-artemis-2.17.0-java8
+
+# Commons configurations
+ENV DEBUG_ENABLED="true"
+
+# CONFIGURATIONS (user:user = permissão para user, 755 = permissão para execução)
+COPY ./configuration ${ARTEMIS_INSTANCE_CUSTOM_FOLDER}/etc
+COPY ./ssl ${ARTEMIS_INSTANCE_CUSTOM_FOLDER}/ssl
+
+# ENV HAWTIO_ARGS="-Dhawtio.realm=activemq -Dhawtio.offline=true -Dhawtio.rolePrincipalClasses=org.apache.activemq.artemis.spi.core.security.jaas.RolePrincipal -Dhawtio.authenticationEnabled=true"
+# ENV JAVA_OPTS="-XX:+PrintClassHistogram -XX:+UseG1GC -XX:+UseStringDeduplication -Xms512M -Xmx2G -Djava.security.auth.login.config=/opt/broker/broker-activemq-artemis/etc/login.config"

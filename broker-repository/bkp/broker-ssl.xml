@@ -1,0 +1,66 @@
+<?xml version='1.0'?>
+
+<configuration xmlns="urn:activemq"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:xi="http://www.w3.org/2001/XInclude"
+    xsi:schemaLocation="
+    urn:activemq https://raw.githubusercontent.com/apache/activemq-artemis/master/artemis-server/src/main/resources/schema/artemis-server.xsd
+    urn:activemq:core https://raw.githubusercontent.com/apache/activemq-artemis/master/artemis-server/src/main/resources/schema/artemis-configuration.xsd
+    urn:activemq:jms https://raw.githubusercontent.com/apache/activemq-artemis/master/artemis-jms-server/src/main/resources/schema/artemis-jms.xsd
+    ">
+
+   <core xmlns="urn:activemq:core" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="urn:activemq:core ">
+
+      <name>${AMQ_NAME}</name>
+      <persistence-enabled>true</persistence-enabled>
+
+      <journal-type>NIO</journal-type>
+      <paging-directory>data/paging</paging-directory>
+      <bindings-directory>data/bindings</bindings-directory>
+      <journal-directory>data/journal</journal-directory>
+      <large-messages-directory>data/large-messages</large-messages-directory>
+      <journal-datasync>true</journal-datasync>
+      <journal-min-files>2</journal-min-files>
+      <journal-pool-files>10</journal-pool-files>
+      <!-- <journal-device-block-size>4096</journal-device-block-size> -->
+      <journal-file-size>10M</journal-file-size>
+      
+      <journal-buffer-timeout>1884000</journal-buffer-timeout>
+      <journal-max-io>1</journal-max-io>
+      <disk-scan-period>5000</disk-scan-period>
+      <max-disk-usage>90</max-disk-usage>
+      <critical-analyzer>true</critical-analyzer>
+      <critical-analyzer-timeout>120000</critical-analyzer-timeout>
+      <critical-analyzer-check-period>60000</critical-analyzer-check-period>
+      <critical-analyzer-policy>HALT</critical-analyzer-policy>
+      <!-- <page-sync-timeout>1884000</page-sync-timeout> -->
+
+      <connection-ttl-override>30000</connection-ttl-override> 
+      <connection-ttl-check-interval>1000</connection-ttl-check-interval>
+      <populate-validated-user>true</populate-validated-user>
+
+      <acceptors>
+         <!-- Acceptor for every supported protocol -->
+         <acceptor name="artemis">tcp://0.0.0.0:61616?tcpSendBufferSize=1048576;tcpReceiveBufferSize=1048576;amqpMinLargeMessageSize=${AMQ_CONFIG_DUPLICATE_DETECTION};protocols=CORE,AMQP,STOMP,HORNETQ,MQTT,OPENWIRE;useEpoll=true;amqpCredits=1000;amqpLowCredits=300</acceptor>
+         <!-- AMQP Acceptor.  Listens on default AMQP port for AMQP traffic.-->
+         <acceptor name="amqp">tcp://0.0.0.0:5671?tcpSendBufferSize=1048576;tcpReceiveBufferSize=1048576;protocols=AMQP;useEpoll=true;amqpCredits=1000;amqpLowCredits=300;amqpMinLargeMessageSize=${AMQ_CONFIG_DUPLICATE_DETECTION}</acceptor>
+         <!-- STOMP Acceptor. -->
+         <acceptor name="stomp">tcp://0.0.0.0:61613?tcpSendBufferSize=1048576;tcpReceiveBufferSize=1048576;protocols=STOMP;useEpoll=true</acceptor>
+         <!-- HornetQ Compatibility Acceptor.  Enables HornetQ Core and STOMP for legacy HornetQ clients. -->
+         <acceptor name="hornetq">tcp://0.0.0.0:5445?anycastPrefix=jms.queue.;multicastPrefix=jms.topic.;protocols=HORNETQ,STOMP;useEpoll=true</acceptor>
+         <!-- MQTT Acceptor -->
+         <acceptor name="mqtt">tcp://0.0.0.0:1883?tcpSendBufferSize=1048576;tcpReceiveBufferSize=1048576;protocols=MQTT;useEpoll=true</acceptor>
+         <!-- SSL Acceptor..-->
+         <acceptor name="amqps">tcp://0.0.0.0:5672?tcpSendBufferSize=1048576;tcpReceiveBufferSize=1048576;protocols=AMQP;useEpoll=true;amqpCredits=1000;amqpMinCredits=300;${JAVA_SSL_ACCEPTORS_ARGS}</acceptor>
+         <acceptor name="netty">tcp://0.0.0.0:61617?tcpSendBufferSize=1048576;tcpReceiveBufferSize=1048576;protocols=CORE,AMQP,STOMP,HORNETQ,MQTT,OPENWIRE;useEpoll=true;amqpCredits=1000;amqpLowCredits=300;${JAVA_SSL_ACCEPTORS_ARGS}</acceptor>
+      </acceptors>
+
+
+    <!-- Import Configurations -->
+    <xi:include href="/opt/broker/broker-activemq-artemis/etc/security-settings.xml" />
+    <xi:include href="/opt/broker/broker-activemq-artemis/etc/addresses-settings.xml" />
+    <xi:include href="/opt/broker/broker-activemq-artemis/etc/addresses.xml" />
+
+   </core>
+</configuration>
