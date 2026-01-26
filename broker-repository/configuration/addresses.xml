@@ -14,8 +14,22 @@
 
 	<!-- Topic/Queue - Teste 1 -->
 	<address name="test.temporary">
-        <multicast>
-            <queue name="sub.t1.test.temporary"/>
+		<multicast>
+            <queue name="sub.t1.test.temporary">
+				<filter string="xQueueTarget IS NULL OR xQueueTarget='TargetOne'" />
+			</queue>
+			<queue name="sub.t2.test.temporary">
+				<filter string="xQueueTarget IS NULL OR xQueueTarget='TargetTwo'" />
+			</queue>
+			<queue name="sub.t3.test.temporary">
+				<filter string="xQueueTarget IS NULL" />
+			</queue>
+			<queue name="sub.t4.test.temporary">
+				<filter string="xQueueTarget IS NULL OR xQueueTarget IS false" />
+			</queue>
+			<queue name="sub.t5.test.temporary">
+				<filter string="xQueueTarget IS NULL OR xQueueTarget='TargetFive1' OR xQueueTarget='TargetFive2'" />
+			</queue>
         </multicast>
     </address>
     <address name="test.temporary.DLA">
