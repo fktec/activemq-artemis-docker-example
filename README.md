@@ -1,4 +1,4 @@
 ## BUILD ACTIVEMQ ARTEMIS BASE IMAGE + ACTIVEMQ ARTEMIS RUN IMAGE
 1- Acesse o broker e depois execute >> "docker build -f Dockerfile-activemq-artemis-java8 -t broker/activemq-artemis-2.17.0-java8 ."
 2- Acesse o broker-repository e depois execute >> "docker build -f Dockerfile-activemq-artemis-java8-run -t broker/activemq-artemis-java8-run ."
-3- docker rm -f activemq-artemis-java8-run ; docker run -d --name activemq-artemis-java8-run -p 8161:8161 -p 5672:5672 -p 61616:61616 -p 61613:61613 -p 1883:1883 -p 9779:9779 -v "/mnt/c/CUSTOM/DEV/PESSOAL/BROKER/ACTIVEMQ-ARTEMIS/ACTIVEMQ-ARTEMIS-COMMUNITY/broker-volume:/opt/broker/broker-activemq-artemis" broker/activemq-artemis-java8-run ; docker logs activemq-artemis-java8-run -f
+3- docker rm -f activemq-artemis-java8-run ; docker run -d --name activemq-artemis-java8-run -p 8161:8161 -p 5672:5672 -p 61616:61616 -p 61613:61613 -p 1883:1883 -p 9779:9779 -v "/mnt/c/CUSTOM/DEV/PESSOAL/BROKER/ACTIVEMQ/activemq-artemis-docker-example-old/broker-volume:/opt/broker/broker-activemq-artemis" broker/activemq-artemis-java8-run ; docker logs activemq-artemis-java8-run -f
