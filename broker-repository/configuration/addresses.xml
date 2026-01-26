@@ -38,6 +38,22 @@
 				<durable>true</durable>
 				<filter string="_AMQ_ORIG_QUEUE='sub.t1.test.temporary'" />
 			</queue>
+			<queue name="sub.t2.test.temporary.DLQ">
+				<durable>true</durable>
+				<filter string="_AMQ_ORIG_QUEUE='sub.t2.test.temporary'" />
+			</queue>
+			<queue name="sub.t3.test.temporary.DLQ">
+				<durable>true</durable>
+				<filter string="_AMQ_ORIG_QUEUE='sub.t3.test.temporary'" />
+			</queue>
+			<queue name="sub.t4.test.temporary.DLQ">
+				<durable>true</durable>
+				<filter string="_AMQ_ORIG_QUEUE='sub.t4.test.temporary'" />
+			</queue>
+			<queue name="sub.t5.test.temporary.DLQ">
+				<durable>true</durable>
+				<filter string="_AMQ_ORIG_QUEUE='sub.t5.test.temporary'" />
+			</queue>
 		</anycast>
 	</address>
 
